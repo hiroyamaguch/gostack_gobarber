@@ -4,7 +4,7 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 
-import AuthContext from '../../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import Button from '../../components/Button';
@@ -13,33 +13,43 @@ import Input from '../../components/Input';
 import { Container, Content, Background } from './styles';
 import Logo from '../../assets/logo.svg';
 
+interface SignInData {
+  email: string;
+  password: string;
+}
+
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const auth = useContext(AuthContext);
+  const { signin } = useContext(AuthContext);
+  const handleSubmit = useCallback(
+    async (data: SignInData) => {
+      try {
+        formRef.current?.setErrors({});
 
-  console.log(auth);
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .required('E-mail obrigatório')
+            .email('Digite um e-mail válido'),
+          password: Yup.string().required('Senha obrigatória'),
+        });
 
-  const handleSubmit = useCallback(async (data: object) => {
-    try {
-      formRef.current?.setErrors({})
+        signin({
+          email: data.email,
+          password: data.password,
+        });
 
-      const schema = Yup.object().shape({
-        email: Yup.string()
-          .required('E-mail obrigatório')
-          .email('Digite um e-mail válido'),
-        password: Yup.string().required('Senha obrigatória'),
-      });
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+      } catch (err) {
+        const errors = getValidationErrors(err);
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
-    } catch (err) {
-      const errors = getValidationErrors(err);
-
-      formRef.current?.setErrors(errors)
-    }
-  }, []);
+        formRef.current?.setErrors(errors);
+      }
+    },
+    [signin],
+  );
 
   return (
     <Container>
@@ -66,7 +76,7 @@ const SignIn: React.FC = () => {
 
       <Background />
     </Container>
-  )
+  );
 };
 
 export default SignIn;

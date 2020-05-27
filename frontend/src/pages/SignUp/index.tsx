@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from 'react';
 import { FiArrowLeft, FiMail, FiLock, FiUser } from 'react-icons/fi';
-import { FormHandles } from '@unform/core'
+import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 
@@ -17,7 +17,7 @@ const SignIn: React.FC = () => {
 
   const handleSubmit = useCallback(async (data: object) => {
     try {
-      formRef.current?.setErrors({})
+      formRef.current?.setErrors({});
 
       const schema = Yup.object().shape({
         name: Yup.string().required('Nome obrigatório'),
@@ -33,7 +33,7 @@ const SignIn: React.FC = () => {
     } catch (err) {
       const errors = getValidationErrors(err);
 
-      formRef.current?.setErrors(errors)
+      formRef.current?.setErrors(errors);
     }
   }, []);
 
@@ -45,7 +45,7 @@ const SignIn: React.FC = () => {
         <Content>
           <img src={Logo} alt="Gobarber Logo" />
 
-          <Form 
+          <Form
             ref={formRef}
             initialData={{
               email: 'hiroyuki_yamaguchi@hotmail.com',
