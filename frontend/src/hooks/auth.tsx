@@ -63,7 +63,7 @@ export function useAuth(): AuthContextData {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error('context must be on App.tsx');
+    throw new Error('authContext must be on initialized');
   }
 
   return context;
