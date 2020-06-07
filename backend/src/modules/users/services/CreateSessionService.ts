@@ -1,12 +1,12 @@
 import { sign } from 'jsonwebtoken';
-import { compare } from 'bcryptjs';
 import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import AuthConfig from '@config/auth';
-
 import User from '@modules/users/infra/typeorm/entities/User';
-import IUsersRepository from '../repositories/IUsersRepository';
+
+import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider';
+import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 
 interface IRequest {
   email: string;
@@ -23,6 +23,9 @@ class CreateSessionService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+
+    @inject('BCryptHashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   public async execute({ email, password }: IRequest): Promise<IResponse> {
@@ -32,7 +35,10 @@ class CreateSessionService {
       throw new AppError('Error email/password not found.', 401);
     }
 
-    const verifyPassword = await compare(password, user.password);
+    const verifyPassword = await this.hashProvider.compareHash(
+      password,
+      user.password,
+    );
 
     if (!verifyPassword) {
       throw new AppError('Error email/password not found.', 401);
