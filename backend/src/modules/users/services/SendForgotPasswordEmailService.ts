@@ -14,14 +14,14 @@ interface IRequest {
 @injectable()
 class SendForgotPasswordEmailService {
   constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+
     @inject('MailProvider')
     private mailProvider: IMailProvider,
 
     @inject('UserTokensRepository')
     private userTokensRepository: IUserTokensRepository,
-
-    @inject('UsersRepository')
-    private usersRepository: IUsersRepository,
   ) {}
 
   public async execute({ email }: IRequest): Promise<void> {
@@ -33,10 +33,21 @@ class SendForgotPasswordEmailService {
 
     const { token } = await this.userTokensRepository.generate(user.id);
 
-    await this.mailProvider.sendMail(
-      email,
-      `Recuperação de senha! Token: ${token}`,
-    );
+    await this.mailProvider.sendMail({
+      to: {
+        name: user.name,
+        email: user.email,
+      },
+      subject: 'Redefinição de senha',
+      templateData: {
+        template:
+          'Olá {{name}}, este é o token de redefinição de senha: {{token}}',
+        variables: {
+          name: user.name,
+          token,
+        },
+      },
+    });
   }
 }
 
