@@ -16,11 +16,11 @@ interface IRequest {
 @injectable()
 class CreateUserService {
   constructor(
-    @inject('UsersRepository')
-    private usersRepository: IUsersRepository,
-
     @inject('BCryptHashProvider')
     private hashProvider: IHashProvider,
+
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
   ) {}
 
   public async execute({ name, email, password }: IRequest): Promise<User> {

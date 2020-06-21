@@ -4,6 +4,6 @@ import IHashRepository from '@modules/users/providers/HashProvider/models/IHashP
 import BCryptHashProvider from '@modules/users/providers/HashProvider/implementations/BCryptHashProvider';
 
 container.registerSingleton<IHashRepository>(
-  'BCryptHashProvider',
+  'HashProvider',
   BCryptHashProvider,
 );
