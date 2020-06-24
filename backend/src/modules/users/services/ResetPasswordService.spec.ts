@@ -1,14 +1,14 @@
-import FakeUsersTokenRepository from '@modules/users/repositories/fakes/FakeUsersTokenRepository';
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
 import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHashProvider';
+import FakeUsersTokenRepository from '@modules/users/repositories/fakes/FakeUsersTokenRepository';
 
 import AppError from '@shared/errors/AppError';
 import ResetPasswordService from './ResetPasswordService';
 
-let fakeRepository: FakeUsersRepository;
-let fakeUsersTokenRepository: FakeUsersTokenRepository;
-let resetPassword: ResetPasswordService;
 let fakeHash: FakeHashProvider;
+let fakeRepository: FakeUsersRepository;
+let resetPassword: ResetPasswordService;
+let fakeUsersTokenRepository: FakeUsersTokenRepository;
 
 describe('ResetPasswordService', () => {
   beforeEach(async () => {

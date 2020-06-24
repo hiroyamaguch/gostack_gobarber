@@ -1,25 +1,32 @@
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
-import FakeStorageProvider from '@shared/container/providers/StorageProvider/fakes/FakeStorageProvider';
 import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHashProvider';
+import FakeStorageProvider from '@shared/container/providers/StorageProvider/fakes/FakeStorageProvider';
 
 import AppError from '@shared/errors/AppError';
 
-import UploadUserAvatarService from './UploadUserAvatarService';
-import CreateSessionService from './CreateSessionService';
 import CreateUserService from './CreateUserService';
+import CreateSessionService from './CreateSessionService';
+import UploadUserAvatarService from './UploadUserAvatarService';
+
+let fakeHash: FakeHashProvider;
+let fakeStorage: FakeStorageProvider;
+let fakeRepository: FakeUsersRepository;
+let createUser: CreateUserService;
+let createSession: CreateSessionService;
+let uploadAvatar: UploadUserAvatarService;
 
 describe('UploadAvatar', () => {
-  it('should be able to create a new avatar', async () => {
-    const FakeHash = new FakeHashProvider();
-    const FakeStorage = new FakeStorageProvider();
-    const FakeRepository = new FakeUsersRepository();
-    const createUser = new CreateUserService(FakeRepository, FakeHash);
-    const createSession = new CreateSessionService(FakeRepository, FakeHash);
-    const uploadAvatar = new UploadUserAvatarService(
-      FakeRepository,
-      FakeStorage,
-    );
+  beforeEach(() => {
+    fakeHash = new FakeHashProvider();
+    fakeStorage = new FakeStorageProvider();
+    fakeRepository = new FakeUsersRepository();
 
+    createUser = new CreateUserService(fakeRepository, fakeHash);
+    createSession = new CreateSessionService(fakeRepository, fakeHash);
+    uploadAvatar = new UploadUserAvatarService(fakeRepository, fakeStorage);
+  });
+
+  it('should be able to create a new avatar', async () => {
     const user = await createUser.execute({
       name: 'Pedro',
       email: 'hiro@gmail.com',
@@ -40,14 +47,7 @@ describe('UploadAvatar', () => {
   });
 
   it('should not be able to update a new avatar', async () => {
-    const FakeStorage = new FakeStorageProvider();
-    const FakeRepository = new FakeUsersRepository();
-    const uploadAvatar = new UploadUserAvatarService(
-      FakeRepository,
-      FakeStorage,
-    );
-
-    expect(
+    await expect(
       uploadAvatar.execute({
         user_id: '2131231',
         avatarFilename: 'file.txt',
@@ -56,18 +56,7 @@ describe('UploadAvatar', () => {
   });
 
   it('should be able to update a new avatar', async () => {
-    const FakeHash = new FakeHashProvider();
-    const FakeStorage = new FakeStorageProvider();
-    const FakeRepository = new FakeUsersRepository();
-
-    const createUser = new CreateUserService(FakeRepository, FakeHash);
-    const createSession = new CreateSessionService(FakeRepository, FakeHash);
-    const uploadAvatar = new UploadUserAvatarService(
-      FakeRepository,
-      FakeStorage,
-    );
-
-    const deleteFile = jest.spyOn(FakeStorage, 'deleteFile');
+    const deleteFile = jest.spyOn(fakeStorage, 'deleteFile');
 
     const user = await createUser.execute({
       name: 'Pedro',
