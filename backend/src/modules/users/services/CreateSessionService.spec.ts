@@ -11,7 +11,7 @@ describe('CreateSession', () => {
     const FakeRepository = new FakeUsersRepository();
     const FakeHash = new FakeHashProvider();
     const createSession = new CreateSessionService(FakeRepository, FakeHash);
-    const createUser = new CreateUserService(FakeHash, FakeRepository);
+    const createUser = new CreateUserService(FakeRepository, FakeHash);
 
     const user = await createUser.execute({
       name: 'Pedro',
@@ -32,7 +32,7 @@ describe('CreateSession', () => {
     const FakeRepository = new FakeUsersRepository();
     const FakeHash = new FakeHashProvider();
     const createSession = new CreateSessionService(FakeRepository, FakeHash);
-    const createUser = new CreateUserService(FakeHash, FakeRepository);
+    const createUser = new CreateUserService(FakeRepository, FakeHash);
 
     expect(
       createSession.execute({ email: 'hiro2@gmail.com', password: '123123' }),
@@ -43,7 +43,7 @@ describe('CreateSession', () => {
     const FakeRepository = new FakeUsersRepository();
     const FakeHash = new FakeHashProvider();
     const createSession = new CreateSessionService(FakeRepository, FakeHash);
-    const createUser = new CreateUserService(FakeHash, FakeRepository);
+    const createUser = new CreateUserService(FakeRepository, FakeHash);
 
     await createUser.execute({
       name: 'Pedro',

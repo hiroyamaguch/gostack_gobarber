@@ -1,4 +1,5 @@
 import { inject, injectable } from 'tsyringe';
+import path from 'path';
 
 import AppError from '@shared/errors/AppError';
 
@@ -31,6 +32,13 @@ class SendForgotPasswordEmailService {
       throw new AppError('User not exists');
     }
 
+    const forgotPasswordTemplate = path.resolve(
+      __dirname,
+      '..',
+      'views',
+      'forgot_password.hbs',
+    );
+
     const { token } = await this.userTokensRepository.generate(user.id);
 
     await this.mailProvider.sendMail({
@@ -40,11 +48,10 @@ class SendForgotPasswordEmailService {
       },
       subject: 'Redefinição de senha',
       templateData: {
-        template:
-          'Olá {{name}}, este é o token de redefinição de senha: {{token}}',
+        file: forgotPasswordTemplate,
         variables: {
           name: user.name,
-          token,
+          link: `http://localhost:3000/reset_password?token=${token}`,
         },
       },
     });
