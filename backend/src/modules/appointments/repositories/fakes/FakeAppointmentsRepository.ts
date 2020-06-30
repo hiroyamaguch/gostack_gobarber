@@ -16,7 +16,7 @@ class AppointmentRepository implements IAppointmentsRepository {
     );
   }
 
-  public async findAllAppointmentsByProvider({
+  public async findAllAppointmentsInMonthByProvider({
     provider_id,
     month,
     year,
