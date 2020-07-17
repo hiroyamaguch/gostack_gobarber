@@ -39,4 +39,37 @@ describe('ListMonthAvailability', () => {
       ]),
     );
   });
+
+  it('should not be able to return available in after hours', async () => {
+    await fakeAppointmentsRepository.create({
+      provider_id: 'user',
+      date: new Date(2020, 4, 20, 8, 0, 0),
+    });
+
+    await fakeAppointmentsRepository.create({
+      provider_id: 'user',
+      date: new Date(2020, 4, 20, 15, 0, 0),
+    });
+
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2020, 4, 20, 12).getTime();
+    });
+
+    const appointments = await showAvailabilityProviders.execute({
+      provider_id: 'user',
+      year: 2020,
+      month: 5,
+      day: 20,
+    });
+
+    expect(appointments).toEqual(
+      expect.arrayContaining([
+        { hour: 8, available: false },
+        { hour: 9, available: false },
+        { hour: 10, available: false },
+        { hour: 15, available: false },
+        { hour: 14, available: true },
+      ]),
+    );
+  });
 });
