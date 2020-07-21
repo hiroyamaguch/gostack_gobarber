@@ -51,11 +51,11 @@ class ListProvidersService {
         appointment => getHours(appointment.date) === hour,
       );
 
-      const consultDate = new Date(year, month, day, hour);
+      const consultDate = new Date(year, month - 1, day, hour);
 
       return {
         hour,
-        available: !hasAppointmentInHour && isAfter(currentDate, consultDate),
+        available: !hasAppointmentInHour && isAfter(consultDate, currentDate),
       };
     });
 
