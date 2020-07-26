@@ -1,6 +1,7 @@
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
 import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHashProvider';
 import FakeStorageProvider from '@shared/container/providers/StorageProvider/fakes/FakeStorageProvider';
+import FakeCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider';
 
 import AppError from '@shared/errors/AppError';
 
@@ -11,6 +12,7 @@ import UploadUserAvatarService from './UploadUserAvatarService';
 let fakeHash: FakeHashProvider;
 let fakeStorage: FakeStorageProvider;
 let fakeRepository: FakeUsersRepository;
+let fakeCacheProvider: FakeCacheProvider;
 let createUser: CreateUserService;
 let createSession: CreateSessionService;
 let uploadAvatar: UploadUserAvatarService;
@@ -20,10 +22,15 @@ describe('UploadAvatar', () => {
     fakeHash = new FakeHashProvider();
     fakeStorage = new FakeStorageProvider();
     fakeRepository = new FakeUsersRepository();
+    fakeCacheProvider = new FakeCacheProvider();
 
-    createUser = new CreateUserService(fakeRepository, fakeHash);
     createSession = new CreateSessionService(fakeRepository, fakeHash);
     uploadAvatar = new UploadUserAvatarService(fakeRepository, fakeStorage);
+    createUser = new CreateUserService(
+      fakeRepository,
+      fakeHash,
+      fakeCacheProvider,
+    );
   });
 
   it('should be able to create a new avatar', async () => {
