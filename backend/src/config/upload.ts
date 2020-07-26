@@ -1,20 +1,48 @@
 import path from 'path';
-import multer from 'multer';
+import multer, { StorageEngine } from 'multer';
 import crypto from 'crypto';
 
-const folder = path.resolve(__dirname, '..', '..', 'tmp');
+const tmpFolder = path.resolve(__dirname, '..', '..', 'tmp');
+
+interface IUploadConfig {
+  driver: 's3' | 'disk';
+  tmpFolder: string;
+  uploadFolder: string;
+
+  multer: {
+    storage: StorageEngine;
+  };
+
+  config: {
+    disk: {};
+    aws: {
+      bucket: string;
+    };
+  };
+}
 
 export default {
-  tmpFolder: folder,
-  uploadFolder: path.resolve(folder, 'uploads'),
+  driver: process.env.STORAGE_DRIVER,
 
-  storage: multer.diskStorage({
-    destination: folder,
-    filename(request, file, callback) {
-      const fileHash = crypto.randomBytes(10).toString('HEX');
-      const fileName = `${fileHash} - ${file.originalname}`;
+  tmpFolder,
+  uploadFolder: path.resolve(tmpFolder, 'uploads'),
 
-      return callback(null, fileName);
+  multer: {
+    storage: multer.diskStorage({
+      destination: tmpFolder,
+      filename(request, file, callback) {
+        const fileHash = crypto.randomBytes(10).toString('HEX');
+        const fileName = `${fileHash}-${file.originalname}`;
+
+        return callback(null, fileName);
+      },
+    }),
+  },
+
+  config: {
+    disk: {},
+    aws: {
+      bucket: 'roningandev',
     },
-  }),
-};
+  },
+} as IUploadConfig;
