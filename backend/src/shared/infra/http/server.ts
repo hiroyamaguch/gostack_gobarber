@@ -16,10 +16,10 @@ import '@shared/container';
 
 const app = express();
 
-app.use(raterLimiter);
 app.use(cors());
 app.use(express.json());
 app.use('/files', express.static(uploadConfig.uploadFolder));
+app.use(raterLimiter);
 app.use(routes);
 
 app.use(errors());

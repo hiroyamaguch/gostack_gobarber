@@ -27,7 +27,7 @@ interface SignInData {
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const { signin } = useAuth();
+  const { signIn } = useAuth();
   const { addToast } = useToast();
   const history = useHistory();
 
@@ -43,7 +43,7 @@ const SignIn: React.FC = () => {
           password: Yup.string().required('Senha obrigatória'),
         });
 
-        await signin({
+        await signIn({
           email: data.email,
           password: data.password,
         });
@@ -69,7 +69,7 @@ const SignIn: React.FC = () => {
         });
       }
     },
-    [signin, addToast, history],
+    [signIn, addToast, history],
   );
 
   return (
