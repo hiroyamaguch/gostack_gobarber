@@ -5,15 +5,20 @@ import IAppointmentsRepository from '@modules/appointments/repositories/IAppoint
 import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointmentDTO';
 import IFindAllInMonthByProviderDTO from '@modules/appointments/dtos/IFindAllInMonthByProviderDTO';
 import IFindAllInDayByProviderDTO from '@modules/appointments/dtos/IFindAllInDayByProviderDTO';
+import IFindByDateDTO from '@modules/appointments/dtos/IFindByDateDTO';
 
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 
 class AppointmentRepository implements IAppointmentsRepository {
   private appointments: Appointment[] = [];
 
-  public async findByDate(date: Date): Promise<Appointment | undefined> {
-    return this.appointments.find(appointment =>
-      isEqual(appointment.date, date),
+  public async findByDate({
+    provider_id,
+    date,
+  }: IFindByDateDTO): Promise<Appointment | undefined> {
+    return this.appointments.find(
+      appointment =>
+        isEqual(appointment.date, date) && appointment.id === provider_id,
     );
   }
 
