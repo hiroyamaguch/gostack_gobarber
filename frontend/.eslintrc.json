@@ -60,6 +60,8 @@
     "operator-linebreak": "off",
     
     "arrow-parens": "off",
+
+    "camelcase": "off",
     
     "@typescript-eslint/camelcase": "off",
     "@typescript-eslint/explicit-function-return-type" : [

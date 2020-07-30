@@ -5,7 +5,7 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 
-import { FiMail, FiLock } from 'react-icons/fi';
+import { FiLock } from 'react-icons/fi';
 
 import { useToast } from '../../hooks/toast';
 
@@ -77,7 +77,7 @@ const SignIn: React.FC = () => {
         });
       }
     },
-    [addToast, history],
+    [addToast, history, location],
   );
 
   return (
