@@ -5,6 +5,7 @@ import { isToday, format, parseISO, isAfter } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 
 import { FiPower, FiClock } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 import {
   Container,
   Header,
@@ -156,13 +157,15 @@ const Dashboard: React.FC = () => {
 
             <div>
               <span>Bem-vindo</span>
-              <strong>{user.name}</strong>
+              <Link to="/profile">
+                <strong>{user.name}</strong>
+              </Link>
             </div>
           </Profile>
 
-          <button type="button" onClick={signOut}>
+          <Link to="/" onClick={signOut}>
             <FiPower />
-          </button>
+          </Link>
         </HeaderContent>
       </Header>
 
